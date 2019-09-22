@@ -17,9 +17,9 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _currentIndex = 0;
   final List<Widget> _children = [
+    PlaceholderWidget("People"),
     Text("Movies"),
-    Text("Tv"),
-    PlaceholderWidget("People")
+    Text("Tv")
   ];
 
   void onNavigationTapped(int index) {
@@ -37,11 +37,11 @@ class _HomeState extends State<Home> {
           onTap: onNavigationTapped,
           items: [
             BottomNavigationBarItem(
-                icon: new Icon(Icons.movie), title: new Text("Movies")),
+                icon: new Icon(Icons.person), title: new Text("People")),
             BottomNavigationBarItem(
-                icon: new Icon(Icons.satellite), title: new Text("TV Shows")),
+                icon: new Icon(Icons.satellite), title: new Text("Movies")),
             BottomNavigationBarItem(
-                icon: new Icon(Icons.person), title: new Text("People"))
+                icon: new Icon(Icons.movie), title: new Text("TV Shows")),
           ]),
     );
   }
