@@ -5,7 +5,10 @@ class PersonResponse {
   PersonResponse({this.page, this.persons});
 
   factory PersonResponse.fromJson(Map<String, dynamic> json) {
-    return PersonResponse(page: json['page'], persons: json['results']);
+    return PersonResponse(
+        page: json['page'],
+        persons: List<PersonResult>.from(
+            json["results"].map((x) => PersonResult.fromJson(x))));
   }
 }
 

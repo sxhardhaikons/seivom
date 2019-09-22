@@ -17,8 +17,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _currentIndex = 0;
   final List<Widget> _children = [
-    PlaceholderWidget("Movies"),
-    PlaceholderWidget("Tv"),
+    Text("Movies"),
+    Text("Tv"),
     PlaceholderWidget("People")
   ];
 
@@ -69,14 +69,34 @@ class PlaceholderWidget extends StatelessWidget {
             case ConnectionState.done:
               if (snapshot.hasError) return Text('Error: ${snapshot.error}');
               List<PersonResult> listOfPersons = snapshot.data.persons;
-              return ListView.builder(
-                itemCount: listOfPersons.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: <Widget>[Text(listOfPersons[index].name)],
-                  );
-                },
-              );
+              return GridView.builder(
+                  itemCount: listOfPersons.length,
+                  gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2),
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                      child: Hero(
+                        tag: listOfPersons[index].actorId,
+                        child: Material(
+                          child: InkWell(
+                            child: GridTile(
+                              child: Image.network(
+                                API_IMAGE_BASE_URL +
+                                    listOfPersons[index].profilePath,
+                                fit: BoxFit.cover,
+                              ),
+                              footer: Container(
+                                color: Colors.yellow,
+                                child: ListTile(
+                                  leading: Text(listOfPersons[index].name),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  });
           }
           return null; // unreachable
         },
