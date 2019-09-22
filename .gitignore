@@ -72,4 +72,5 @@
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
-**/lib/brain.constants.dart
+# Hide the api key from git
+/lib/brain/secret.dart
