@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_pagewise/flutter_pagewise.dart';
 import 'package:http/http.dart';
 import 'package:seivom/brain/constants.dart';
-import 'package:seivom/brain/secret.dart';
 
 import 'model/personresponse.dart';
 
@@ -16,11 +16,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _currentIndex = 0;
-  final List<Widget> _children = [
-    PlaceholderWidget("People"),
-    Text("Movies"),
-    Text("Tv")
-  ];
+  final List<Widget> _children = [ActorsWidget(), Text("Movies"), Text("Tv")];
 
   void onNavigationTapped(int index) {
     setState(() {
@@ -33,6 +29,8 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.black,
+          unselectedItemColor: Colors.white,
           currentIndex: _currentIndex,
           onTap: onNavigationTapped,
           items: [
@@ -47,71 +45,111 @@ class _HomeState extends State<Home> {
   }
 }
 
-class PlaceholderWidget extends StatelessWidget {
-  final String tag;
-
-  PlaceholderWidget(this.tag);
+class ActorsWidget extends StatelessWidget {
+  final int nextPage = 1;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(tag),
-      ),
+      backgroundColor: Colors.black,
       body: FutureBuilder(
-        builder: (context, AsyncSnapshot<PersonResponse> snapshot) {
+        builder: (context, AsyncSnapshot<List<PersonResult>> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
-              return Text('Press button to start.');
+              return Center(
+                  child: Text(
+                'Press button to start.',
+                style: TextStyle(color: Colors.white),
+              ));
             case ConnectionState.active:
             case ConnectionState.waiting:
-              return Text('Awaiting result...');
+              return Column();
             case ConnectionState.done:
-              if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-              List<PersonResult> listOfPersons = snapshot.data.persons;
-              return GridView.builder(
-                  itemCount: listOfPersons.length,
-                  gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
-                  itemBuilder: (BuildContext context, int index) {
-                    return Card(
-                      child: Hero(
-                        tag: listOfPersons[index].actorId,
-                        child: Material(
-                          child: InkWell(
-                            child: GridTile(
-                              child: Image.network(
-                                API_IMAGE_BASE_URL +
-                                    listOfPersons[index].profilePath,
+              if (snapshot.hasError)
+                return Center(
+                    child: Text(
+                  '${snapshot.error}',
+                  style: TextStyle(color: Colors.white),
+                ));
+              return PagewiseGridView.count(
+                loadingBuilder: (BuildContext context) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+                crossAxisCount: 2,
+                pageSize: 20,
+                itemBuilder: (context, PersonResult personResult, _) {
+                  return GestureDetector(
+                    child: Stack(
+                      children: <Widget>[
+                        Positioned(
+                            top: 0,
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            child: Hero(
+                              tag: 'actor_image',
+                              child: FadeInImage(
+                                image: NetworkImage(API_IMAGE_BASE_URL +
+                                    personResult.profilePath),
+                                placeholder: NetworkImage(
+                                    "https://lakewangaryschool.sa.edu.au/wp-content/uploads/2017/11/placeholder-profile-sq.jpg"),
                                 fit: BoxFit.cover,
                               ),
-                              footer: Container(
-                                color: Colors.yellow,
-                                child: ListTile(
-                                  leading: Text(listOfPersons[index].name),
+                            )),
+                        Positioned(
+                            bottom: 5,
+                            left: 10,
+                            right: 10,
+                            child: Container(
+                              height: 30,
+                              width: double.infinity,
+                              alignment: Alignment.topCenter,
+                              color: Colors.black.withOpacity(0.5),
+                              child: Center(
+                                child: Text(
+                                  personResult.name,
+                                  style: TextStyle(color: Colors.white),
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  });
+                            ))
+                      ],
+                    ),
+                  );
+                },
+                pageFuture: (nextPage) => getPopularPersons(nextPage + 1),
+              );
           }
-          return null; // unreachable
+          return null;
         },
-        future: getPopularPersons(),
+        future: getPopularPersons(nextPage),
       ),
     );
   }
 
-  Future<PersonResponse> getPopularPersons() async {
-    var result = await get(
-        API_BASE_URL + API_POPULAR_PERSONS + API_KEY_KEY + API_KEY_VALUE);
+  Future<List<PersonResult>> getPopularPersons(int page) async {
+    if (page < 500) {
+      var result = await get(API_BASE_URL +
+          API_POPULAR_PERSONS +
+          API_KEY_KEY +
+          "f4efd829c18aaff93d6db6c3ea88bde7&page=" +
+          page.toString());
 
-    if (result.statusCode == 200) {
-      return PersonResponse.fromJson(json.decode(result.body));
+      if (result.statusCode == 200) {
+        PersonResponse response =
+            PersonResponse.fromJson(json.decode(result.body));
+        List<PersonResult> listOfPersons = response.persons;
+//        List<PersonResult> helper = List<PersonResult>();
+//        listOfPersons.forEach((f) {
+//          if (f.profilePath != null) helper.add(f);
+//        });
+       // print("Size" + "${helper.length}");
+        return listOfPersons;
+      }
+      throw Exception('Failed to load data');
+    } else {
+      return null;
     }
-    throw Exception('Failed to load data');
   }
 }
