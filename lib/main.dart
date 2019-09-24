@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:seivom/home.dart';
+import 'package:seivom/ui/home.dart';
 
 void main() => runApp(Seivom());
 

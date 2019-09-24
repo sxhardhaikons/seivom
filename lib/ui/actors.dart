@@ -1,51 +1,15 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pagewise/flutter_pagewise.dart';
 import 'package:http/http.dart';
 import 'package:seivom/brain/constants.dart';
+import 'package:seivom/ui/actors_detail.dart';
 
-import 'model/personresponse.dart';
+import '../model/personresponse.dart';
 
-class Home extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _HomeState();
-  }
-}
-
-class _HomeState extends State<Home> {
-  int _currentIndex = 0;
-  final List<Widget> _children = [ActorsWidget(), Text("Movies"), Text("Tv")];
-
-  void onNavigationTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _children[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.black,
-          unselectedItemColor: Colors.white,
-          currentIndex: _currentIndex,
-          onTap: onNavigationTapped,
-          items: [
-            BottomNavigationBarItem(
-                icon: new Icon(Icons.person), title: new Text("People")),
-            BottomNavigationBarItem(
-                icon: new Icon(Icons.satellite), title: new Text("Movies")),
-            BottomNavigationBarItem(
-                icon: new Icon(Icons.movie), title: new Text("TV Shows")),
-          ]),
-    );
-  }
-}
-
-class ActorsWidget extends StatelessWidget {
+class Actors extends StatelessWidget {
   final int nextPage = 1;
 
   @override
@@ -58,7 +22,7 @@ class ActorsWidget extends StatelessWidget {
             case ConnectionState.none:
               return Center(
                   child: Text(
-                'Press button to start.',
+                'No connection',
                 style: TextStyle(color: Colors.white),
               ));
             case ConnectionState.active:
@@ -68,19 +32,35 @@ class ActorsWidget extends StatelessWidget {
               if (snapshot.hasError)
                 return Center(
                     child: Text(
-                  '${snapshot.error}',
+                  'Error in connection',
                   style: TextStyle(color: Colors.white),
                 ));
               return PagewiseGridView.count(
                 loadingBuilder: (BuildContext context) {
                   return Center(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
                   );
                 },
                 crossAxisCount: 2,
                 pageSize: 20,
                 itemBuilder: (context, PersonResult personResult, _) {
+                  String imageUrl;
+                  if (personResult.profilePath != null) {
+                    imageUrl = API_IMAGE_BASE_URL + personResult.profilePath;
+                  } else {
+                    imageUrl =
+                        "https://www.pm10inc.com/wp-content/themes/micron/images/placeholders/placeholder_large_dark.jpg";
+                  }
+                  // String imageUrl = API_IMAGE_BASE_URL + personResult.profilePath;
                   return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => new ActorsDetails(imageUrl)));
+                    },
                     child: Stack(
                       children: <Widget>[
                         Positioned(
@@ -89,15 +69,13 @@ class ActorsWidget extends StatelessWidget {
                             left: 0,
                             right: 0,
                             child: Hero(
-                              tag: 'actor_image',
-                              child: FadeInImage(
-                                image: NetworkImage(API_IMAGE_BASE_URL +
-                                    personResult.profilePath),
-                                placeholder: NetworkImage(
-                                    "https://lakewangaryschool.sa.edu.au/wp-content/uploads/2017/11/placeholder-profile-sq.jpg"),
-                                fit: BoxFit.cover,
-                              ),
-                            )),
+                                tag: imageUrl,
+                                child: FadeInImage(
+                                  image: NetworkImage(imageUrl),
+                                  placeholder: AssetImage(
+                                      "lib/assets/images/offline_placeholder.jpg"),
+                                  fit: BoxFit.cover,
+                                ))),
                         Positioned(
                             bottom: 5,
                             left: 10,
@@ -134,17 +112,13 @@ class ActorsWidget extends StatelessWidget {
           API_POPULAR_PERSONS +
           API_KEY_KEY +
           "f4efd829c18aaff93d6db6c3ea88bde7&page=" +
+          "&page=" +
           page.toString());
 
       if (result.statusCode == 200) {
         PersonResponse response =
             PersonResponse.fromJson(json.decode(result.body));
         List<PersonResult> listOfPersons = response.persons;
-//        List<PersonResult> helper = List<PersonResult>();
-//        listOfPersons.forEach((f) {
-//          if (f.profilePath != null) helper.add(f);
-//        });
-       // print("Size" + "${helper.length}");
         return listOfPersons;
       }
       throw Exception('Failed to load data');
