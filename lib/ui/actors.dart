@@ -27,7 +27,14 @@ class Actors extends StatelessWidget {
               ));
             case ConnectionState.active:
             case ConnectionState.waiting:
-              return Column();
+              return Column(children: <Widget>[
+                Center(
+                  child: CircularProgressIndicator(
+                    //todo fix this
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                )
+              ]);
             case ConnectionState.done:
               if (snapshot.hasError)
                 return Center(
@@ -59,7 +66,8 @@ class Actors extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => new ActorsDetails(imageUrl)));
+                              builder: (context) => new ActorsDetails(imageUrl,
+                                  personResult.name, personResult.actorId)));
                     },
                     child: Stack(
                       children: <Widget>[
@@ -69,7 +77,7 @@ class Actors extends StatelessWidget {
                             left: 0,
                             right: 0,
                             child: Hero(
-                                tag: imageUrl,
+                                tag: imageUrl + personResult.name,
                                 child: FadeInImage(
                                   image: NetworkImage(imageUrl),
                                   placeholder: AssetImage(
@@ -84,7 +92,7 @@ class Actors extends StatelessWidget {
                               height: 30,
                               width: double.infinity,
                               alignment: Alignment.topCenter,
-                              color: Colors.black.withOpacity(0.5),
+                              color: Colors.black.withOpacity(0.7),
                               child: Center(
                                 child: Text(
                                   personResult.name,
@@ -111,7 +119,7 @@ class Actors extends StatelessWidget {
       var result = await get(API_BASE_URL +
           API_POPULAR_PERSONS +
           API_KEY_KEY +
-          "f4efd829c18aaff93d6db6c3ea88bde7&page=" +
+          "f4efd829c18aaff93d6db6c3ea88bde7" +
           "&page=" +
           page.toString());
 
