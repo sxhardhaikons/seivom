@@ -27,14 +27,11 @@ class Actors extends StatelessWidget {
               ));
             case ConnectionState.active:
             case ConnectionState.waiting:
-              return Column(children: <Widget>[
-                Center(
-                  child: CircularProgressIndicator(
-                    //todo fix this
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                  ),
-                )
-              ]);
+              return Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              );
             case ConnectionState.done:
               if (snapshot.hasError)
                 return Center(
@@ -45,9 +42,7 @@ class Actors extends StatelessWidget {
               return PagewiseGridView.count(
                 loadingBuilder: (BuildContext context) {
                   return Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
+                    child: Container(),
                   );
                 },
                 crossAxisCount: 2,
@@ -66,7 +61,7 @@ class Actors extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => new ActorsDetails(imageUrl,
+                              builder: (context) => new ActorsScreen(imageUrl,
                                   personResult.name, personResult.actorId)));
                     },
                     child: Stack(
