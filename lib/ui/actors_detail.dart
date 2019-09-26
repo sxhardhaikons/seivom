@@ -38,13 +38,9 @@ class ActorsDetails extends StatelessWidget {
     return CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
-          title: Text(
-            name,
-            style: TextStyle(color: Colors.white),
-          ),
           backgroundColor: Colors.black,
           pinned: true,
-          expandedHeight: 600,
+          expandedHeight: 610,
           flexibleSpace: FlexibleSpaceBar(
               background: Column(
             children: <Widget>[
@@ -203,16 +199,24 @@ class ActorsDetails extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 20.0),
-                              child: Column(
-                                children: <Widget>[
-                                  Center(
-                                    child: Icon(
-                                      Icons.arrow_drop_up,
-                                      color: Colors.white,
+                              padding: const EdgeInsets.only(top: 8.0,
+                                  bottom: 8.0, left: 72.0, right: 8.0),
+                              child: Center(
+                                child: Row(
+                                  children: <Widget>[
+                                    Text(
+                                      name,
+                                      style: TextStyle(color: Colors.white),
                                     ),
-                                  )
-                                ],
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Icon(
+                                        Icons.arrow_drop_up,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             )
                           ],
@@ -234,7 +238,6 @@ class ActorsDetails extends StatelessWidget {
               stream: _biographyEvent.stream,
               initialData: "Biography N/A",
               builder: (context, snapshot) {
-                //todo check all cases
                 return Center(
                   child: Text(
                     snapshot.data == null || snapshot.data == ""
