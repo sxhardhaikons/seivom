@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'actors.dart';
+import 'movies.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -12,9 +13,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _currentIndex = 0;
   final List<Widget> _children = [
-    Center(
-      child: Text("Movies Comming Soon"),
-    ),
+    Movies(),
     Center(
       child: Text("Tv shows Comming Soon"),
     ),

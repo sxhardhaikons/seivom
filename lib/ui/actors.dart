@@ -81,6 +81,12 @@ class _Actors extends State<Actors> {
                         child: Text('Retry to load more'),
                         onPressed: callback,
                       ),
+                    ),
+                    Center(
+                      child: RaisedButton(
+                        child: Text('Full refresh'),
+                        onPressed: refreshData,
+                      ),
                     )
                   ],
                 );

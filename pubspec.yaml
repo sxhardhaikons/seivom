@@ -45,6 +45,7 @@ flutter:
 
   assets:
     - lib/assets/images/offline_placeholder.jpg
+    - lib/assets/images/movie_dark_placeholder.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

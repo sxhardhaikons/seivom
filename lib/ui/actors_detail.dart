@@ -40,7 +40,7 @@ class ActorsDetails extends StatelessWidget {
         SliverAppBar(
           backgroundColor: Colors.black,
           pinned: true,
-          expandedHeight: 610,
+          expandedHeight: 620,
           flexibleSpace: FlexibleSpaceBar(
               background: Column(
             children: <Widget>[
@@ -271,7 +271,7 @@ class ActorsDetails extends StatelessWidget {
   }
 }
 
-class RadialPieChart extends StatelessWidget {
+class RadialPieChart extends StatelessWidget{
   final double popularity;
 
   RadialPieChart(this.popularity);
