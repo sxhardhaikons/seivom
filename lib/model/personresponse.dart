@@ -33,7 +33,7 @@ class PersonDetail {
   String deathDay;
   List<String> alsoKnownAs;
   String biography;
-  double popularity;
+  dynamic popularity;
   String placeOfBirth;
 
   PersonDetail(

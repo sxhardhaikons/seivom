@@ -17,7 +17,7 @@ class MovieResult {
   int id;
   String originalLanguage;
   String title;
-  double voteAverage;
+  dynamic voteAverage;
   String overView;
   String releaseDate;
 
@@ -32,7 +32,7 @@ class MovieResult {
         title: json['title'],
         voteAverage: json['vote_average'],
         overView: json['overview'],
-        releaseDate: json['overview']
+        releaseDate: json['release_date']
     );
   }
 }

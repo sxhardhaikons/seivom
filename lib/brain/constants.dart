@@ -4,3 +4,6 @@ const API_SINGLE_PERSON = "person/";
 const API_KEY_KEY = "?api_key=";
 const API_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w400/";
 const API_POPULAR_MOVIES = "movie/popular";
+const API_TOP_RATED_MOVIES = "movie/top_rated";
+const API_UPCOMING_MOVIES = "movie/upcoming";
+const API_NOW_PLAYING_MOVIES = "movie/now_playing";
