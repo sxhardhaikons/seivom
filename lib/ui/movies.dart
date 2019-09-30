@@ -78,6 +78,8 @@ class MovieCell extends StatelessWidget {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: FadeInImage(
+                          fadeInDuration: Duration(seconds: 1),
+                          fadeOutDuration: Duration(seconds: 1),
                           width: 100,
                           height: 200,
                           placeholder: AssetImage(
@@ -103,6 +105,8 @@ class MovieCell extends StatelessWidget {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: FadeInImage(
+                          fadeInDuration: Duration(seconds: 1),
+                          fadeOutDuration: Duration(seconds: 1),
                           width: 100,
                           height: 200,
                           placeholder: AssetImage(
@@ -128,6 +132,8 @@ class MovieCell extends StatelessWidget {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: FadeInImage(
+                            fadeInDuration: Duration(seconds: 1),
+                            fadeOutDuration: Duration(seconds: 1),
                             width: 100,
                             height: 200,
                             placeholder: AssetImage(
@@ -172,6 +178,8 @@ class MovieCell extends StatelessWidget {
                             Hero(
                                 tag: imageUrl + snapshot.data[index].title,
                                 child: FadeInImage(
+                                  fadeInDuration: Duration(seconds: 1),
+                                  fadeOutDuration: Duration(seconds: 1),
                                   width: 100,
                                   height: 200,
                                   image: NetworkImage(imageUrl),
